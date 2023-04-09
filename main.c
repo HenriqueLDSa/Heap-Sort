@@ -1,45 +1,51 @@
 #include <time.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
 int extraMemoryAllocated;
 
 // swap function
-void swap(int *xp, int *yp)
+void swap(int *a, int *b)
 {
-    int temp = *xp;
-    *xp = *yp;
-    *yp = temp;
-}
-
-int largestValue(int root, int left, int right)
-{
-	if(root > left && root < right)
-		return root;
-	else if(left > root)
-		return left;
-	else if(right > root)
-		return right;
-	else	
-		return root;
+    int temp = *a;
+    *a = *b;
+    *b = temp;
 }
 
 // makes binary tree into a heap
-void heapify(int arr[])
+void heapify(int arr[], int size, int index)
 {
+	int largestiIndex = index;
+	int left = 2 * index + 1;
+	int right = 2 * index + 2;
+
+	if(left < size && arr[left] > arr[largestiIndex])
+		largestiIndex = left;
 	
+	if(right < size && arr[right] > arr[largestiIndex])
+		largestiIndex = right;
+
+	if(largestiIndex != index)
+	{
+		swap(&arr[index], &arr[largestiIndex]);
+		heapify(arr, size, largestiIndex);
+	}
 }
 
 // implements heap sort
 // extraMemoryAllocated counts bytes of memory allocated
-void heapSort(int arr[], int n)
+void heapSort(int arr[], int arraySize)
 {
-	int arraySize = sizeof(arr) / sizeof(arr[0]);
+	for(int i = arraySize / 2 - 1; i >= 0; i--)
+		heapify(arr, arraySize, i);
 
-	
-	
+	for(int i = arraySize - 1; i >= 0; i--)
+	{
+		swap(&arr[0], &arr[i]);
+		heapify(arr, i, 0);
+	}
 }
-
 
 // implement merge sort
 // extraMemoryAllocated counts bytes of extra memory allocated
@@ -138,16 +144,28 @@ void printArray(int pData[], int dataSz)
 {
 	int i, sz = dataSz - 100;
 	printf("\tData:\n\t");
-	for (i=0;i<100;++i)
-	{
-		printf("%d ",pData[i]);
-	}
-	printf("\n\t");
 	
-	for (i=sz;i<dataSz;++i)
+	if(dataSz >= 100)
 	{
-		printf("%d ",pData[i]);
+		for (i=0;i<100;++i)
+		{
+			printf("%d ",pData[i]);
+		}
+		printf("\n\t");
+		
+		for (i=sz;i<dataSz;++i)
+		{
+			printf("%d ",pData[i]);
+		}
 	}
+	else
+	{
+		for (i=0;i<dataSz;++i)
+		{
+			printf("%d ",pData[i]);
+		}
+	}
+
 	printf("\n\n");
 }
 
